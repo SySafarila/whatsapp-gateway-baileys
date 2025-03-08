@@ -12,6 +12,9 @@
     "@hapi/boom": "^10.0.1",
     "@whiskeysockets/baileys": "^6.7.16",
     "axios": "^1.8.2",
-    "qrcode-terminal": "^0.12.0"
+    "jimp": "^1.6.0",
+    "link-preview-js": "^3.0.14",
+    "qrcode-terminal": "^0.12.0",
+    "sharp": "^0.33.5"
   }
 }
