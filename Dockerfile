@@ -1,10 +1,26 @@
-# use the official Bun image
-# see all versions at https://hub.docker.com/r/oven/bun/tags
-FROM oven/bun:1 AS base
-WORKDIR /usr/src/app
+FROM node:20-alpine AS builder
+WORKDIR /app
+
+COPY package*.json .
+
+RUN npm install
 
 COPY . .
 
-RUN bun install
+RUN npm run build
 
-ENTRYPOINT [ "bun", "run", "index.ts" ]
+FROM node:20-alpine AS base
+WORKDIR /app
+
+COPY package*.json .
+
+ENV NODE_ENV=production
+RUN npm install --no-dev
+
+FROM node:20-alpine
+WORKDIR /app
+
+COPY --from=base /app/node_modules /app/node_modules
+COPY --from=builder /app/dist /app/dist
+
+ENTRYPOINT [ "node", "./dist/index.js" ]

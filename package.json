@@ -1,20 +1,36 @@
 {
   "name": "baileys",
-  "module": "index.ts",
+  "version": "1.0.0",
+  "description": "To install dependencies:",
+  "main": "index.js",
   "devDependencies": {
-    "@types/bun": "latest"
+    "@types/dotenv": "^6.1.1",
+    "@types/node": "^22.13.10",
+    "@types/qrcode-terminal": "^0.12.2",
+    "@typescript-eslint/eslint-plugin": "^8.26.0",
+    "@typescript-eslint/parser": "^8.26.0",
+    "eslint": "^9.22.0",
+    "eslint-config-prettier": "^10.1.1",
+    "eslint-plugin-prettier": "^5.2.3",
+    "prettier": "^3.5.3",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.2"
   },
-  "peerDependencies": {
-    "typescript": "^5.0.0"
+  "scripts": {
+    "lint": "eslint src --ext .ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "ts-node src/index.ts"
   },
-  "type": "module",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
     "@hapi/boom": "^10.0.1",
     "@whiskeysockets/baileys": "^6.7.16",
     "axios": "^1.8.2",
-    "jimp": "^1.6.0",
-    "link-preview-js": "^3.0.14",
-    "qrcode-terminal": "^0.12.0",
-    "sharp": "^0.33.5"
+    "dotenv": "^16.4.7",
+    "qrcode-terminal": "^0.12.0"
   }
 }
