@@ -36,9 +36,12 @@ app.post('/logout', (_req: Request, res: Response) => {
 });
 
 app.post('/send-message', (req: Request, res: Response) => {
-  const { message, number } = req.body as { message: string; number: number };
+  const { message, phone_number } = req.body as {
+    message: string;
+    phone_number: number;
+  };
 
-  if (!message || !number) {
+  if (!message || !phone_number) {
     res.status(400).json({
       message: 'message or number are required',
     });
@@ -46,7 +49,7 @@ app.post('/send-message', (req: Request, res: Response) => {
 
   if (whatsApp && whatsApp.user) {
     whatsApp
-      .sendMessage(String(number + '@s.whatsapp.net'), {
+      .sendMessage(String(phone_number + '@s.whatsapp.net'), {
         text: message,
       })
       .then(() => {
