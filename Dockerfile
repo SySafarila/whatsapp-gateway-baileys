@@ -23,4 +23,8 @@ WORKDIR /app
 COPY --from=base /app/node_modules /app/node_modules
 COPY --from=builder /app/dist /app/dist
 
+ENV APP_PORT=3000
+
+EXPOSE 3000
+
 ENTRYPOINT [ "node", "./dist/index.js" ]

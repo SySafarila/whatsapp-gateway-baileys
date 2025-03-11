@@ -6,7 +6,7 @@ import {
 } from './whatsApp';
 
 const app = express();
-const expressPort = process.env.PORT || 3000;
+const expressPort = process.env.APP_PORT || 3000;
 
 app.use(express.json());
 
