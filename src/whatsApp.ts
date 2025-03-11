@@ -7,6 +7,7 @@ import axios, { AxiosError } from 'axios';
 import fs from 'node:fs/promises';
 
 let whatsApp: ReturnType<typeof makeWASocket> | null = null;
+let whatsAppQr: string | null = null;
 
 function isLoggedIn(): boolean {
   return whatsApp !== null && whatsApp.user !== undefined;
@@ -51,6 +52,7 @@ async function connectToWhatsApp() {
     const { connection, lastDisconnect, qr } = update;
 
     if (qr) {
+      whatsAppQr = qr;
       const qrUrl = process.env.RECEIVE_QR_URL;
       if (qrUrl) {
         try {
@@ -83,6 +85,7 @@ async function connectToWhatsApp() {
 
     if (connection === 'close') {
       console.info('CONNECTION CLOSE');
+      whatsAppQr = null;
       const lastError = lastDisconnect?.error as Boom | undefined;
       const statusCode = lastError?.output?.statusCode;
 
@@ -94,6 +97,7 @@ async function connectToWhatsApp() {
         connectToWhatsApp();
       }
     } else if (connection === 'open') {
+      whatsAppQr = null;
       console.info('CONNECTED.');
     }
   });
@@ -118,4 +122,10 @@ async function connectToWhatsApp() {
 // Jalankan koneksi
 // connectToWhatsApp();
 
-export { connectToWhatsApp, logoutAndRestartWhatsApp, whatsApp, isLoggedIn };
+export {
+  connectToWhatsApp,
+  isLoggedIn,
+  logoutAndRestartWhatsApp,
+  whatsApp,
+  whatsAppQr,
+};
