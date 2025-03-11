@@ -1,4 +1,7 @@
 import { Request, Response } from 'express';
+import Joi from 'joi';
+import HttpError from '../utils/HttpError';
+import ValidateSendMessage from '../validators/ValidateSendMessage';
 import {
   whatsApp,
   isLoggedIn as whatsAppIsLoggedIn,
@@ -32,36 +35,57 @@ export default class WhatsappController {
     }
   };
 
-  public static sendMessage = (req: Request, res: Response) => {
+  public static sendMessage = async (req: Request, res: Response) => {
     const { message, phone_number } = req.body as {
       message: string;
       phone_number: number;
     };
 
-    if (!message || !phone_number) {
-      res.status(400).json({
-        message: 'message or number are required',
-      });
-    }
+    try {
+      await ValidateSendMessage.sendMessage({ message, phone_number });
 
-    if (whatsApp && whatsApp.user) {
-      whatsApp
-        .sendMessage(String(phone_number + '@s.whatsapp.net'), {
-          text: message,
-        })
-        .then(() => {
-          res.json({
-            message: 'success',
-          });
-        })
-        .catch(() => {
-          res.status(500).json({
-            message: 'failed',
-          });
+      if (String(phone_number).startsWith('0')) {
+        throw new HttpError({
+          message:
+            'please use country code for phone_number, example: 62821xxx',
+          statusCode: 400,
         });
-    } else {
+      }
+
+      if (!whatsApp || !whatsApp.user) {
+        throw new HttpError({
+          message: 'WhatsApp client unauthenticated',
+          statusCode: 401,
+        });
+      }
+
+      await whatsApp.sendMessage(String(phone_number + '@s.whatsapp.net'), {
+        text: message,
+      });
+
+      res.json({
+        message: 'success',
+        phone_number: phone_number,
+      });
+    } catch (error) {
+      if (error instanceof Joi.ValidationError) {
+        res.status(400).json({
+          message: error.message,
+          errors: error.details,
+        });
+        return;
+      }
+
+      if (error instanceof HttpError) {
+        res.status(error.statusCode).json({
+          message: error.message,
+        });
+        return;
+      }
+
       res.status(401).json({
-        message: 'whatsapp client not started',
+        message: (error as Error).message,
+        phone_number: phone_number,
       });
     }
   };
