@@ -11,6 +11,7 @@
     "@types/qrcode-terminal": "^0.12.2",
     "@typescript-eslint/eslint-plugin": "^8.26.0",
     "@typescript-eslint/parser": "^8.26.0",
+    "esbuild": "0.25.1",
     "eslint": "^9.22.0",
     "eslint-config-prettier": "^10.1.1",
     "eslint-plugin-prettier": "^5.2.3",
@@ -22,6 +23,7 @@
     "lint": "eslint src --ext .ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "build": "tsc",
+    "bundle": "tsc && esbuild dist/index.js --bundle --outfile=bundle/index.js --platform=node --packages=external && esbuild bundle/index.js --minify --outfile=bundle/index.min.js",
     "start": "node dist/index.js",
     "dev": "ts-node src/index.ts"
   },
