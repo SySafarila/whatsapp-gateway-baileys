@@ -5,6 +5,7 @@ import makeWASocket, {
 } from '@whiskeysockets/baileys';
 import axios, { AxiosError } from 'axios';
 import fs from 'node:fs/promises';
+import QRCode from 'qrcode';
 
 let whatsApp: ReturnType<typeof makeWASocket> | null = null;
 let whatsAppQr: string | null = null;
@@ -52,13 +53,16 @@ async function connectToWhatsApp() {
     const { connection, lastDisconnect, qr } = update;
 
     if (qr) {
-      whatsAppQr = qr;
+      QRCode.toDataURL(qr, (err, url) => {
+        whatsAppQr = url;
+      });
+
       const qrUrl = process.env.RECEIVE_QR_URL;
       if (qrUrl) {
         try {
           await axios.post(
             qrUrl,
-            { qr },
+            { whatsAppQr },
             {
               headers: {
                 Accept: 'application/json',
