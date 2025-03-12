@@ -1,10 +1,12 @@
 import express, { Request, Response } from 'express';
 import WhatsappController from './controllers/WhatsappController';
+import { APIKEY } from './middleware';
 
 const app = express();
 const expressPort = process.env.APP_PORT || 3000;
 
 app.use(express.json());
+app.use(APIKEY);
 
 app.get('/', (_req: Request, res: Response) => {
   res.json({
