@@ -59,6 +59,17 @@ export default class WhatsappController {
         });
       }
 
+      const checkOnWhatsapp = await whatsApp.onWhatsApp(
+        String(phone_number + '@s.whatsapp.net'),
+      );
+
+      if (!checkOnWhatsapp || checkOnWhatsapp.length === 0) {
+        throw new HttpError({
+          message: 'Phone number not found on WhatsApp',
+          statusCode: 404,
+        });
+      }
+
       await whatsApp.sendMessage(String(phone_number + '@s.whatsapp.net'), {
         text: message,
       });

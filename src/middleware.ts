@@ -5,7 +5,7 @@ export const APIKEY = (req: Request, res: Response, next: NextFunction) => {
   const token = req.get('X-Api-Key');
 
   if (!API_KEY) {
-    console.warn('YOUR SYSTEM IS NOT SECURE, PLEASE DEFINE API_KEY ON .env');
+    console.warn('YOUR SYSTEM IS NOT SECURE, PLEASE SET API_KEY ON .env');
     next();
     return;
   } else {
